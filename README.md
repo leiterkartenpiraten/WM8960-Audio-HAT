@@ -2,9 +2,6 @@
 
 The drivers of [WM8960 Audio HAT] for Raspberry Pi.
 
-http://www.waveshare.net/shop/WM8960-Audio-HAT.htm
-
-http://www.waveshare.com/wm8960-audio-hat.htm
 
 ### Install wm8960-soundcard
 Get the wm8960 soundcard source code. and install all linux kernel drivers
@@ -76,6 +73,30 @@ pi@raspberrypi:~/WM8960-Audio-HAT $ sudo ./uninstall.sh
 Please reboot your raspberry pi to apply all settings
 Thank you!
 ------------------------------------------------------
+```
+
+### Headphone detection
+This fork adds support for headphone detection which was backported from the current upstream version of the driver.
+
+Our configuration uses the following settings:
+
+Register                                        | Settings                                                   | Value
+----------------------------------------------- | ---------------------------------------------------------- | ------
+HPSEL[1:0] of R48 (Additional Control 4)        | JD2 used for jack detect input                             | 10
+{HPSWEN:HPSWPOL} of R24 (Additional Control 2)  | Headphone switch enabled, HPDETECT high = headphone        | 10
+{TOCLKSEL:TOEN} of R23 (Additional Control 1)   | Slow Clock Enabled, Faster Response                        | 11
+
+This is reflected in the wlf,hp-cfg section in the wm8960-soundcard.dts like this:
+
+```			
+wm8960: wm8960{
+				compatible = "wlf,wm8960";
+				reg = <0x1a>;
+				#sound-dai-cells = <0>;
+				AVDD-supply = <&vdd_5v0_reg>;
+				DVDD-supply = <&vdd_3v3_reg>;
+				wlf,hp-cfg = <2 2 3>;
+			};
 ```
 
 Enjoy !
