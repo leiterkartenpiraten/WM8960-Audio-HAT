@@ -34,6 +34,7 @@
 				#sound-dai-cells = <0>;
 				AVDD-supply = <&vdd_5v0_reg>;
 				DVDD-supply = <&vdd_3v3_reg>;
+				wlf,hp-cfg = <2 2 3>;
 			};
 		};
     };
