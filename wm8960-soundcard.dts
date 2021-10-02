@@ -58,11 +58,10 @@
                         "Headphone Jack", "HP_R",
                         "Speaker", "SPK_LP",
                         "Speaker", "SPK_LN",
-                        "LINPUT1", "Mic Jack", // MIC-IN_L
-                        "LINPUT3", "Mic Jack", // HP-JD - FIXME this is not a MIC input channel, it is the GPIO for the HP detection! 
-                        "RINPUT1", "Mic Jack", // MIC-IN_R
-                        "RINPUT2", "Mic Jack"; // LINE-IN_R
-			"LINPUT2", "Mic Jack"; // LINE-IN_L
+                        "LINPUT1", "Mic Jack",
+                        "LINPUT2", "Line In",
+                        "RINPUT1", "Mic Jack",
+                        "RINPUT2", "Line In";
 
 
 
