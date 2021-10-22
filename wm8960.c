@@ -22,6 +22,8 @@
 #include <sound/initval.h>
 #include <sound/tlv.h>
 #include <sound/wm8960.h>
+#include <linux/gpio.h>
+#include <linux/gpio/consumer.h>
 
 #include "wm8960.h"
 
@@ -945,6 +947,8 @@ static int wm8960_set_bias_level_out3(struct snd_soc_component *component,
 
 	switch (level) {
 	case SND_SOC_BIAS_ON:
+		/* LKP Enable AMP */
+		gpio_set_value(26, 1);
 		break;
 
 	case SND_SOC_BIAS_PREPARE:
@@ -987,6 +991,9 @@ static int wm8960_set_bias_level_out3(struct snd_soc_component *component,
 		break;
 
 	case SND_SOC_BIAS_STANDBY:
+		/* LKP Disable AMP */
+		gpio_set_value(26, 0);
+
 		if (snd_soc_component_get_bias_level(component) == SND_SOC_BIAS_OFF) {
 			regcache_sync(wm8960->regmap);
 
@@ -1504,6 +1511,11 @@ static int wm8960_i2c_probe(struct i2c_client *i2c,
 	regmap_update_bits(wm8960->regmap, WM8960_ADDCTL4, 3 << 2, wm8960->pdata.hp_cfg[0] << 2);
 	regmap_update_bits(wm8960->regmap, WM8960_ADDCTL2, 3 << 5, wm8960->pdata.hp_cfg[1] << 5);
 	regmap_update_bits(wm8960->regmap, WM8960_ADDCTL1, 3, wm8960->pdata.hp_cfg[2]);
+
+	/* Enable soft mute */
+	regmap_update_bits(wm8960->regmap, WM8960_DACCTL2, 0x0c, 0x0c);
+
+	gpio_request_one(26, GPIOF_OUT_INIT_LOW, "LKP AMP Control");
 
 	i2c_set_clientdata(i2c, wm8960);
 
